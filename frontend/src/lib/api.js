@@ -1,5 +1,6 @@
 // Mock API for static GitHub Pages deployment
 // This replaces the axios backend calls with mock data
+// Note: Only GET requests are supported as this is a read-only static site
 
 const mockData = {
     '/dashboard/summary': {
@@ -30,7 +31,12 @@ const mockData = {
 const api = {
     get: (url) => {
         return Promise.resolve({ data: mockData[url] || {} });
-    }
+    },
+    // These methods are not implemented for static site but included for API compatibility
+    post: () => Promise.reject(new Error('POST not supported in static mode')),
+    put: () => Promise.reject(new Error('PUT not supported in static mode')),
+    delete: () => Promise.reject(new Error('DELETE not supported in static mode')),
+    patch: () => Promise.reject(new Error('PATCH not supported in static mode'))
 };
 
 export default api;
