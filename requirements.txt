@@ -11,3 +11,55 @@ watchdog
 python-multipart
 python-dotenv
 pandas
+
+import os
+import pandas as pd
+
+# =============================
+# PATHS (relative to this script's location)
+# =============================
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+INPUT_FOLDER = os.path.join(SCRIPT_DIR, "ERP CSV")
+OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "Mazak Watch Folder")
+
+INPUT_FILE = os.path.join(INPUT_FOLDER, "Mock ERP.csv")
+OUTPUT_FILE = os.path.join(OUTPUT_FOLDER, "orders_cleaned.csv")
+
+# =============================
+# Create folders if they don't exist
+# =============================
+os.makedirs(INPUT_FOLDER, exist_ok=True)
+os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+# =============================
+# Load and clean the data
+# =============================
+try:
+    df = pd.read_csv(INPUT_FILE)
+except FileNotFoundError:
+    print(f"Error: Input file not found at {INPUT_FILE}")
+    exit(1)
+
+# Convert Order Qty to numeric, fill NaN with 0
+df["Order Qty"] = pd.to_numeric(df["Order Qty"], errors="coerce").fillna(0)
+
+# Sort: 
+# 1. Largest quantity first (descending)
+# 2. Then by Material Type (ascending)
+df = df.sort_values(
+    by=["Order Qty", "Material Type"],
+    ascending=[False, True]
+)
+
+# Optional: If you later get a due date column, add it as third sort key like this:
+# df = df.sort_values(by=["Order Qty", "Material Type", "Due Date"], ascending=[False, True, True])
+
+# =============================
+# Save the cleaned & sorted file
+# =============================
+df.to_csv(OUTPUT_FILE, index=False)
+
+print("Processing complete.")
+print(f"Cleaned file saved to: {OUTPUT_FILE}")
+
