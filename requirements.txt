@@ -69,6 +69,9 @@ print(f"Cleaned file saved to: {OUTPUT_FILE}")
 
 Markdown.md per scope
 Add in commented out API key plus pull/read criteria 
+add logic for continuous updates, and how to ensure we don't pull in the same data multiple times. 
+so script for update the difference of new input and what's already been inputted then update, send to the next part of the pipeline? 
+
 import unformatted csv, 
 convert, drop, clean and sort csv 
    conversions
@@ -87,4 +90,5 @@ convert, drop, clean and sort csv
     by=["Order Qty", "Material Type", "DueDate"],
     ascending=[False, True]
 )
+
 
